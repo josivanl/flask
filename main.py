@@ -16,10 +16,10 @@ def saveOrUpdateCustomer():
         service_activity = request.args.get('service_activity')
 
         helper.customer_entity(customer_token, date_start, customer_name, customer_email, customer_cpfcnpj, service_job, service_activity)
-        return "Salvo com sucesso"
+        return "Ok"
     except (Exception) as error:
         print(error)
-        return 'Erro na comunicação com a API'
+        return 'Error'
 
 
 
