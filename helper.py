@@ -50,4 +50,4 @@ def customer_entity(customer_token, date_start,customer_name, customer_email, cu
     conn.commit()
     conn.close()
 
-    return result_enabled
+    return result_enabled[0]
