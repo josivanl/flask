@@ -15,11 +15,11 @@ def saveOrUpdateCustomer():
         service_job = request.args.get('service_job')
         service_activity = request.args.get('service_activity')
 
-        helper.customer_entity(customer_token, date_start, customer_name, customer_email, customer_cpfcnpj, service_job, service_activity)
-        return "Ok"
+        result_enabled = helper.customer_entity(customer_token, date_start, customer_name, customer_email, customer_cpfcnpj, service_job, service_activity)
+        return "{'result': 'Ok', 'enabled': " + result_enabled + "}"
     except (Exception) as error:
         print(error)
-        return 'Error'
+        return "{'result': 'Error', 'enabled': ''}"
 
 
 

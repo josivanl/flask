@@ -40,10 +40,14 @@ def customer_entity(customer_token, date_start,customer_name, customer_email, cu
         ON CONFLICT (token)
         DO UPDATE SET
             (date_start,name, email, cpfcnpj,service_job, service_activity, date_update)
-            = (EXCLUDED.date_start, EXCLUDED.name, EXCLUDED.email,EXCLUDED.cpfcnpj,EXCLUDED.service_job, EXCLUDED.service_activity, EXCLUDED.date_update) ;
+            = (EXCLUDED.date_start, EXCLUDED.name, EXCLUDED.email,EXCLUDED.cpfcnpj,EXCLUDED.service_job, EXCLUDED.service_activity, EXCLUDED.date_update) 
+        returning enabled;
         """
     conn = connection()
     cursor = conn.cursor()
     cursor.execute(sql_upset, (customer_token, date_start, customer_name, customer_email, customer_cpfcnpj, service_job, service_activity))
+    result_enabled = cursor.fetchone()
     conn.commit()
     conn.close()
+
+    return result_enabled
