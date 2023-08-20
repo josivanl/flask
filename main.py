@@ -19,7 +19,7 @@ def saveOrUpdateCustomer():
         return "{'result': 'Ok', 'enabled': " + result_enabled + "}"
     except (Exception) as error:
         print(error)
-        return "{'result': 'Error', 'enabled': ''}"
+        return "{'result':" + error.message + ", 'enabled': ''}"
 
 
 
