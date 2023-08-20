@@ -1,12 +1,26 @@
-from flask import Flask, jsonify
+from flask import Flask, jsonify, request
+import helper
 import os
 
 app = Flask(__name__)
 
+@app.route('/saveOrUpdateCustomer')
+def saveOrUpdateCustomer():
+    try:
+        customer_token = request.args.get('customer_token')
+        date_start = request.args.get('date_start')
+        customer_name = request.args.get('customer_name')
+        customer_email = request.args.get('customer_email')
+        customer_cpfcnpj = request.args.get('customer_cpfcnpj')
+        service_job = request.args.get('service_job')
+        service_activity = request.args.get('service_activity')
 
-@app.route('/')
-def index():
-    return jsonify({"Choo Choo": "Welcome to your Flask app 🚅"})
+        helper.customer_entity(customer_token, date_start, customer_name, customer_email, customer_cpfcnpj, service_job, service_activity)
+        return "Salvo com sucesso"
+    except (Exception) as error:
+        print(error)
+        return 'Erro na comunicação com a API'
+
 
 
 if __name__ == '__main__':
