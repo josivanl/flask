@@ -26,7 +26,7 @@ def postgres_connect_engine():
 
 def customer_entity(customer_token, date_start,customer_name, customer_email, customer_cpfcnpj, service_job, service_activity):
     sql_upset = """
-        INSERT INTO customer (token,date_start,name, email, cpfcnpj,service_job, service_activity, date_update, enabled)
+        INSERT INTO customer (token,date_start,name, email, cpfcnpj,service_job, service_activity, date_update)
         VALUES (
 		%s,
 		%s,
@@ -35,13 +35,12 @@ def customer_entity(customer_token, date_start,customer_name, customer_email, cu
 		%s,
 		%s, 
 		%s,
-		now(),
-		enabled	
+		now()	
 		)
         ON CONFLICT (token)
         DO UPDATE SET
             (date_start,name, email, cpfcnpj,service_job, service_activity, date_update)
-            = (EXCLUDED.date_start, EXCLUDED.name, EXCLUDED.email,EXCLUDED.cpfcnpj,EXCLUDED.service_job, EXCLUDED.service_activity, EXCLUDED.date_update, EXCLUDED.enabled) 
+            = (EXCLUDED.date_start, EXCLUDED.name, EXCLUDED.email,EXCLUDED.cpfcnpj,EXCLUDED.service_job, EXCLUDED.service_activity, EXCLUDED.date_update) 
         returning enabled;
         """
     conn = connection()

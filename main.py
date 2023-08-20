@@ -1,6 +1,7 @@
 from flask import Flask, jsonify, request
 import helper
 import os
+import json
 
 app = Flask(__name__)
 
@@ -16,10 +17,24 @@ def saveOrUpdateCustomer():
         service_activity = request.args.get('service_activity')
 
         result_enabled = helper.customer_entity(customer_token, date_start, customer_name, customer_email, customer_cpfcnpj, service_job, service_activity)
-        return "{'result': 'Ok', 'enabled': " + result_enabled + "}"
+
+        dictionary = {
+            'result': 'Ok',
+            'enabled': result_enabled
+        }
+        # Serializing json
+        json_object = json.dumps(dictionary, indent=4)
+
+        return json_object
     except (Exception) as error:
         print(error)
-        return "{'result':" + error.message + ", 'enabled': ''}"
+        dictionary = {
+            'result': error.message,
+            'enabled': ''
+        }
+        # Serializing json
+        json_object = json.dumps(dictionary, indent=4)
+        return json_object
 
 
 
