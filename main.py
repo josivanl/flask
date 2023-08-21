@@ -36,14 +36,14 @@ def saveOrUpdateCustomer():
 @app.route('/saveOrUpdateCustomerDatabase')
 def saveOrUpdateCustomerDatabase():
     try:
-        id_customer = request.args.get('id_costumer')
+        id_costumer = request.args.get('id_costumer')
         database_host = request.args.get('database_host')
         database_name = request.args.get('database_name')
         database_port = request.args.get('database_port')
         database_user = request.args.get('database_user')
         database_password = request.args.get('database_password')
 
-        helper.customerDatabase_entity(id, database_host, database_name, database_port, database_user, database_password)
+        helper.customerDatabase_entity(id_costumer, database_host, database_name, database_port, database_user, database_password)
 
         dictionary = {
             'result': 'Ok'
