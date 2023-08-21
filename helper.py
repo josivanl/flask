@@ -57,7 +57,7 @@ def customer_entity(customer_token, date_start,customer_name, customer_email, cu
     return result_customer[0]
 
 
-def customerDatabase_entity(id_customer, hostname, name, port, username, password):
+def customerDatabase_entity(id_customer, hostname, name, port, username, password, generate_key):
     sql_truncate = "delete from customer_database"
     conn = connection()
     cursor = conn.cursor()
@@ -76,7 +76,7 @@ def customerDatabase_entity(id_customer, hostname, name, port, username, passwor
 		)
         """
     cursor_databse = conn.cursor()
-    cursor_databse.execute(sql_upset, (id_customer, hostname, name, port, username, password))
+    cursor_databse.execute(sql_upset, (id_customer, hostname, name, port, username, password, generate_key))
     conn.commit()
     conn.close()
 
