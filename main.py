@@ -19,8 +19,8 @@ def saveOrUpdateCustomer():
 
         dictionary = {
             'result': 'Ok',
-            'id': result_enabled[0][0],
-            'enabled': result_enabled[0][1]
+            'id': result_enabled[0],
+            'enabled': result_enabled[1]
         }
         return helper.dictionaryToJson(dictionary)
     except (Exception) as error:

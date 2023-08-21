@@ -54,5 +54,5 @@ def customer_entity(customer_token, date_start,customer_name, customer_email, cu
     conn.commit()
     conn.close()
 
-    return result_customer[0], result_customer[1]
+    return result_customer[0]
 
