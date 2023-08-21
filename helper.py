@@ -1,7 +1,7 @@
 # import pandas as pd
 import psycopg2
 # from sqlalchemy import create_engine
-# import json
+import json
 
 def connection():
     conn = psycopg2.connect(database="railway",
@@ -23,6 +23,10 @@ def postgres_connect_engine():
     # str_engine = f'postgresql://{user}:{password}@{host}:{port}/{database}'
     str_engine = 'postgresql://postgres:rIlX01detohjSbzMjtAv@containers-us-west-208.railway.app:6034/railway'
     return str_engine
+
+def dictionaryToJson(dictionary):
+    json_object = json.dumps(dictionary, indent=4)
+    return json_object
 
 def customer_entity(customer_token, date_start,customer_name, customer_email, customer_cpfcnpj, service_job, service_activity):
     sql_upset = """
@@ -51,3 +55,4 @@ def customer_entity(customer_token, date_start,customer_name, customer_email, cu
     conn.close()
 
     return result_enabled[0]
+

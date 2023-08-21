@@ -22,10 +22,7 @@ def saveOrUpdateCustomer():
             'result': 'Ok',
             'enabled': result_enabled
         }
-        # Serializing json
-        json_object = json.dumps(dictionary, indent=4)
-
-        return json_object
+        return helper.dictionaryToJson(dictionary)
     except (Exception) as error:
         print(error)
         dictionary = {
@@ -33,8 +30,7 @@ def saveOrUpdateCustomer():
             'enabled': ''
         }
         # Serializing json
-        json_object = json.dumps(dictionary, indent=4)
-        return json_object
+        return helper.dictionaryToJson(dictionary)
 
 
 
