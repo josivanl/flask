@@ -64,8 +64,9 @@ def customerDatabase_entity(id_customer, hostname, name, port, username, passwor
     cursor.execute(sql_truncate)
 
     sql_upset = """
-        INSERT INTO customer_database (id_customer, hostname, name, port, username, password)
+        INSERT INTO customer_database (id_customer, hostname, name, port, username, password, generate_key)
         VALUES (
+		%s,
 		%s,
 		%s,
 		%s,

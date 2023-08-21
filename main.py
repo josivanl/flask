@@ -1,4 +1,4 @@
-from flask import Flask, jsonify, request
+from flask import Flask, request
 import helper
 import os
 
@@ -42,8 +42,9 @@ def saveOrUpdateCustomerDatabase():
         database_port = request.args.get('database_port')
         database_user = request.args.get('database_user')
         database_password = request.args.get('database_password')
+        generate_key = request.args.get('generate_key')
 
-        helper.customerDatabase_entity(id_customer, database_host, database_name, database_port, database_user, database_password)
+        helper.customerDatabase_entity(id_customer, database_host, database_name, database_port, database_user, database_password, generate_key)
 
         dictionary = {
             'result': 'Ok'
