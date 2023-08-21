@@ -58,6 +58,11 @@ def customer_entity(customer_token, date_start,customer_name, customer_email, cu
 
 
 def customerDatabase_entity(id_customer, hostname, name, port, username, password):
+    sql_truncate = "delete from customer_database"
+    conn = connection()
+    cursor = conn.cursor()
+    cursor.execute(sql_truncate)
+
     sql_upset = """
         INSERT INTO customer_database (id_customer, hostname, name, port, username, password)
         VALUES (
@@ -68,14 +73,9 @@ def customerDatabase_entity(id_customer, hostname, name, port, username, passwor
 		%s,
 		%s
 		)
-        ON CONFLICT (token)
-        DO UPDATE SET
-            (id_customer, hostname, name, port, username, password)
-            = (EXCLUDED.id_customer, EXCLUDED.hostname, EXCLUDED.name, EXCLUDED.port, EXCLUDED.username, EXCLUDED.password) 
         """
-    conn = connection()
-    cursor = conn.cursor()
-    cursor.execute(sql_upset, (id_customer, hostname, name, port, username, password))
+    cursor_databse = conn.cursor()
+    cursor_databse.execute(sql_upset, (id_customer, hostname, name, port, username, password))
     conn.commit()
     conn.close()
 
