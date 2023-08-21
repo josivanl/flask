@@ -1,7 +1,6 @@
 from flask import Flask, jsonify, request
 import helper
 import os
-import json
 
 app = Flask(__name__)
 
@@ -20,13 +19,15 @@ def saveOrUpdateCustomer():
 
         dictionary = {
             'result': 'Ok',
-            'enabled': result_enabled
+            'id': result_enabled[0][0],
+            'enabled': result_enabled[0][1]
         }
         return helper.dictionaryToJson(dictionary)
     except (Exception) as error:
         print(error)
         dictionary = {
             'result': error.message,
+            'id': '',
             'enabled': ''
         }
         # Serializing json

@@ -45,14 +45,14 @@ def customer_entity(customer_token, date_start,customer_name, customer_email, cu
         DO UPDATE SET
             (date_start,name, email, cpfcnpj,service_job, service_activity, date_update)
             = (EXCLUDED.date_start, EXCLUDED.name, EXCLUDED.email,EXCLUDED.cpfcnpj,EXCLUDED.service_job, EXCLUDED.service_activity, EXCLUDED.date_update) 
-        returning enabled;
+        returning id, enabled;
         """
     conn = connection()
     cursor = conn.cursor()
     cursor.execute(sql_upset, (customer_token, date_start, customer_name, customer_email, customer_cpfcnpj, service_job, service_activity))
-    result_enabled = cursor.fetchone()
+    result_customer = cursor.fetchall()
     conn.commit()
     conn.close()
 
-    return result_enabled[0]
+    return result_customer[0], result_customer[1]
 
