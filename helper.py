@@ -51,6 +51,7 @@ def customer_entity(customer_token, date_start,customer_name, customer_email, cu
     cursor = conn.cursor()
     cursor.execute(sql_upset, (customer_token, date_start, customer_name, customer_email, customer_cpfcnpj, service_job, service_activity))
     result_customer = cursor.fetchall()
+    cursor.close()
     conn.commit()
     conn.close()
 
@@ -62,6 +63,7 @@ def customerDatabase_entity(id_customer, hostname, name, port, username, passwor
     conn = connection()
     cursor = conn.cursor()
     cursor.execute(sql_truncate)
+    cursor.close()
 
     sql_upset = """
         INSERT INTO customer_database (id_customer, hostname, name, port, username, password, generate_key)
@@ -77,6 +79,31 @@ def customerDatabase_entity(id_customer, hostname, name, port, username, passwor
         """
     cursor_databse = conn.cursor()
     cursor_databse.execute(sql_upset, (id_customer, hostname, name, port, username, password, generate_key))
+    cursor_databse.close()
     conn.commit()
     conn.close()
 
+
+def job_entity(customer_id, id_job_customer, name, last_run, next_run, status, enabled):
+    sql_upset = """
+            INSERT INTO service_job (customer_id, id_job_customer, name, last_run, next_run, status, enabled)
+            VALUES (
+    		%s,
+    		%s,
+    		%s, 
+    		%s, 
+    		%s,
+    		%s, 
+    		%s	
+    		)
+            ON CONFLICT (customer_id, name)
+            DO UPDATE SET
+                (id_job_customer, last_run, next_run, status, enabled)
+                = (EXCLUDED.id_job_customer, EXCLUDED.last_run, EXCLUDED.next_run, EXCLUDED.status, EXCLUDED.enabled);
+            """
+    conn = connection()
+    cursor = conn.cursor()
+    cursor.execute(sql_upset, (customer_id, id_job_customer, name, last_run, next_run, status, enabled))
+    cursor.close()
+    conn.commit()
+    conn.close()
