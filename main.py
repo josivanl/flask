@@ -60,7 +60,28 @@ def saveOrUpdateCustomerDatabase():
 
 @app.route('/structureDatabaseCreate')
 def structureDatabaseCreate():
-    return helper.structure_database_create()
+    try:
+        return helper.structure_database_create()
+    except (Exception) as error:
+        print(error)
+        dictionary = {
+            'result': error.message
+        }
+        # Serializing json
+        return helper.dictionaryToJson(dictionary)
+
+@app.route('/structureDatabaseCreateUpdate')
+def structureDatabaseCreateUpdate():
+    try:
+        id = request.args.get('id')
+        return helper.structure_database_create_update(id)
+    except (Exception) as error:
+        print(error)
+        dictionary = {
+            'result': error.message
+        }
+        # Serializing json
+        return helper.dictionaryToJson(dictionary)
 
 
 

@@ -108,12 +108,29 @@ def job_entity(customer_id, id_job_customer, name, last_run, next_run, status, e
     conn.close()
 
 def structure_database_create():
+
     sql = "SELECT id, sql_text FROM structure_database WHERE indicator_created = False"
     conn = connection()
-    df = pd.read_sql_query(sql, conn)
-    return df.to_json()
+    cursor = conn.cursor()
+    cursor.execute(sql)
+    result_structure = cursor.fetchall()
+    cursor.close()
+    conn.commit()
+    conn.close()
 
-structure_database_create()
+    df = pd.DataFrame(result_structure)
+    df.columns = ['Id', 'Sql_Text']
 
+    return df.to_json(orient="records")
+
+
+def structure_database_create_update(id):
+    sql = "UPDATE structure_database SET indicator_created = True WHERE id = %s"
+    conn = connection()
+    cursor = conn.cursor()
+    cursor.execute(sql, (id))
+    cursor.close()
+    conn.commit()
+    conn.close()
 
 
