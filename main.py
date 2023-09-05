@@ -82,6 +82,30 @@ def structureDatabaseCreateUpdate(id):
         # Serializing json
         return helper.dictionaryToJson(dictionary)
 
+@app.route('/structureDatabaseUpdate')
+def structureDatabaseUpdate():
+    try:
+        return helper.structure_database_update()
+    except (Exception) as error:
+        print(error)
+        dictionary = {
+            'result': error.message
+        }
+        # Serializing json
+        return helper.dictionaryToJson(dictionary)
+
+@app.route('/structureDatabaseUpdateUpdate/<id>', methods=["PUT"])
+def structureDatabaseUpdateUpdate(id):
+    try:
+        return helper.structure_database_create_update_update(id)
+    except (Exception) as error:
+        print(error)
+        dictionary = {
+            'result': error.message
+        }
+        # Serializing json
+        return helper.dictionaryToJson(dictionary)
+
 
 
 if __name__ == '__main__':

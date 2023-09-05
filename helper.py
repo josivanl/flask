@@ -123,7 +123,6 @@ def structure_database_create():
 
     return df.to_json(orient="records")
 
-
 def structure_database_create_update(id):
     sql = "UPDATE structure_database SET indicator_created = True WHERE id = %s"
     conn = connection()
@@ -139,4 +138,34 @@ def structure_database_create_update(id):
     # Serializing json
     return dictionaryToJson(dictionary)
 
+def structure_database_update():
 
+    sql = "SELECT id, sql_text, name, type_object FROM structure_database WHERE indicator_update = True"
+    conn = connection()
+    cursor = conn.cursor()
+    cursor.execute(sql)
+    result_structure = cursor.fetchall()
+    cursor.close()
+    conn.commit()
+    conn.close()
+
+    df = pd.DataFrame(result_structure)
+    df.columns = ['id', 'sql_text', 'name', 'type_object']
+
+    return df.to_json(orient="records")
+
+
+def structure_database_create_update_update(id):
+    sql = "UPDATE structure_database SET indicator_update = False WHERE id = %s"
+    conn = connection()
+    cursor = conn.cursor()
+    cursor.execute(sql, (id))
+    cursor.close()
+    conn.commit()
+    conn.close()
+
+    dictionary = {
+        'result': "Ok"
+    }
+    # Serializing json
+    return dictionaryToJson(dictionary)
