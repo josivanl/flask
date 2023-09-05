@@ -119,7 +119,8 @@ def structure_database_create():
     conn.close()
 
     df = pd.DataFrame(result_structure)
-    df.columns = ['Id', 'Sql_Text']
+    if df.size > 0:
+        df.columns = ['Id', 'Sql_Text']
 
     return df.to_json(orient="records")
 
@@ -150,7 +151,8 @@ def structure_database_update():
     conn.close()
 
     df = pd.DataFrame(result_structure)
-    df.columns = ['id', 'sql_text', 'name', 'type_object']
+    if df.size > 0:
+        df.columns = ['id', 'sql_text', 'name', 'type_object']
 
     return df.to_json(orient="records")
 
