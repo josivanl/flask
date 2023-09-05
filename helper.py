@@ -133,4 +133,10 @@ def structure_database_create_update(id):
     conn.commit()
     conn.close()
 
+    dictionary = {
+        'result': "Ok"
+    }
+    # Serializing json
+    return dictionaryToJson(dictionary)
+
 

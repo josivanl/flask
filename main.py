@@ -70,10 +70,9 @@ def structureDatabaseCreate():
         # Serializing json
         return helper.dictionaryToJson(dictionary)
 
-@app.route('/structureDatabaseCreateUpdate')
-def structureDatabaseCreateUpdate():
+@app.route('/structureDatabaseCreateUpdate/<id>', methods=["PUT"])
+def structureDatabaseCreateUpdate(id):
     try:
-        id = request.args.get('id')
         return helper.structure_database_create_update(id)
     except (Exception) as error:
         print(error)
