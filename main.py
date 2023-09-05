@@ -58,6 +58,11 @@ def saveOrUpdateCustomerDatabase():
         # Serializing json
         return helper.dictionaryToJson(dictionary)
 
+@app.route('/structureDatabaseCreate')
+def structureDatabaseCreate():
+    return helper.structure_database_create()
+
+
 
 if __name__ == '__main__':
     app.run(debug=True, port=os.getenv("PORT", default=5000))

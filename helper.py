@@ -1,4 +1,4 @@
-# import pandas as pd
+import pandas as pd
 import psycopg2
 # from sqlalchemy import create_engine
 import json
@@ -83,7 +83,6 @@ def customerDatabase_entity(id_customer, hostname, name, port, username, passwor
     conn.commit()
     conn.close()
 
-
 def job_entity(customer_id, id_job_customer, name, last_run, next_run, status, enabled):
     sql_upset = """
             INSERT INTO service_job (customer_id, id_job_customer, name, last_run, next_run, status, enabled)
@@ -107,3 +106,14 @@ def job_entity(customer_id, id_job_customer, name, last_run, next_run, status, e
     cursor.close()
     conn.commit()
     conn.close()
+
+def structure_database_create():
+    sql = "SELECT id, sql_text FROM structure_database WHERE indicator_created = False"
+    conn = connection()
+    df = pd.read_sql_query(sql, conn)
+    return df.to_json()
+
+structure_database_create()
+
+
+
