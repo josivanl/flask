@@ -109,7 +109,9 @@ def structureDatabaseUpdateUpdate(id):
 @app.route('/jobMonitor/<id_customer>', methods=["POST"])
 def jobMonitor(id_customer):
     try:
+        print(id_customer)
         content = request.json
+        print(content)
         if len(content) > 0:
             helper.jobMonitorDelete(id_customer)
             helper.jobMonitorAdd(id_customer, content)
