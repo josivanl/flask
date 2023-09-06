@@ -185,6 +185,7 @@ def jobMonitorAdd(id_customer, job_json):
 
     conn = connection()
     cursor = conn.cursor()
+
     i = 0
     while i < len(job_json):
         id_job_customer = job_json[i]["CodigoJob"]
