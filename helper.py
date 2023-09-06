@@ -120,7 +120,7 @@ def structure_database_create():
 
     df = pd.DataFrame(result_structure)
     if df.size > 0:
-        df.columns = ['id', 'sql_Text']
+        df.columns = ['id', 'sql_text']
 
     return df.to_json(orient="records")
 
