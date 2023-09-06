@@ -171,3 +171,35 @@ def structure_database_create_update_update(id):
     }
     # Serializing json
     return dictionaryToJson(dictionary)
+
+def jobMonitorDelete(id_customer):
+    sql = "DELETE FROM service_job WHERE customer_id = %s"
+    conn = connection()
+    cursor = conn.cursor()
+    cursor.execute(sql, (id_customer))
+    cursor.close()
+    conn.commit()
+    conn.close()
+
+def jobMonitorAdd(id_customer, job_json):
+
+    conn = connection()
+    cursor = conn.cursor()
+    i = 0
+    while i < len(job_json):
+        id_job_customer = job_json[i]["CodigoJob"]
+        name = job_json[i]["Nome"]
+        last_run = job_json[i]["DataUltimaExecucao"]
+        next_run = job_json[i]["DataProximaExecucao"]
+        status = job_json[i]["Situacao"]
+        enabled = False
+        if job_json[i]["IndicadorJobHabilitado"] == "Sim":
+            enabled = True
+
+        sql = "INSERT INTO service_job (customer_id, id_job_customer, name, last_run, next_run, status, enabled, date_update) values (%s, %s, %s, %s, %s, %s, %s, now())"
+        cursor.execute(sql, (id_customer, id_job_customer, name, last_run, next_run, status, enabled))
+        i += 1
+
+    cursor.close()
+    conn.commit()
+    conn.close()

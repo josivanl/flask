@@ -106,6 +106,27 @@ def structureDatabaseUpdateUpdate(id):
         # Serializing json
         return helper.dictionaryToJson(dictionary)
 
+@app.route('/jobMonitor/<id_customer>', methods=["POST"])
+def jobMonitor(id_customer):
+    try:
+        content = request.json
+        if len(content) > 0:
+            helper.jobMonitorDelete(id_customer)
+            helper.jobMonitorAdd(id_customer, content)
+
+        dictionary = {
+            'result': "Ok"
+        }
+        # Serializing json
+        return helper.dictionaryToJson(dictionary)
+    except (Exception) as error:
+        print(error)
+        dictionary = {
+            'result': error.message
+        }
+        # Serializing json
+        return helper.dictionaryToJson(dictionary)
+
 
 
 if __name__ == '__main__':
