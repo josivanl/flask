@@ -185,14 +185,11 @@ def jobMonitorAdd(id_customer, job_json):
 
     conn = connection()
     cursor = conn.cursor()
-    print("1")
     json_data = json.loads(job_json)
-    print("2")
+
     i = 0
     while i < len(json_data):
-        print("3")
         id_job_customer = json_data[i]["CodigoJob"]
-        print("4")
         name = json_data[i]["Nome"]
         last_run = json_data[i]["DataUltimaExecucao"]
         next_run = json_data[i]["DataProximaExecucao"]
