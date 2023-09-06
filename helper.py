@@ -185,16 +185,20 @@ def jobMonitorAdd(id_customer, job_json):
 
     conn = connection()
     cursor = conn.cursor()
-
+    print("1")
+    json_data = json.loads(job_json)
+    print("2")
     i = 0
-    while i < len(job_json):
-        id_job_customer = job_json[i]["CodigoJob"]
-        name = job_json[i]["Nome"]
-        last_run = job_json[i]["DataUltimaExecucao"]
-        next_run = job_json[i]["DataProximaExecucao"]
-        status = job_json[i]["Situacao"]
+    while i < len(json_data):
+        print("3")
+        id_job_customer = json_data[i]["CodigoJob"]
+        print("4")
+        name = json_data[i]["Nome"]
+        last_run = json_data[i]["DataUltimaExecucao"]
+        next_run = json_data[i]["DataProximaExecucao"]
+        status = json_data[i]["Situacao"]
         enabled = False
-        if job_json[i]["IndicadorJobHabilitado"] == "Sim":
+        if json_data[i]["IndicadorJobHabilitado"] == "Sim":
             enabled = True
 
         sql = "INSERT INTO service_job (customer_id, id_job_customer, name, last_run, next_run, status, enabled, date_update) values (%s, %s, %s, %s, %s, %s, %s, now())"
