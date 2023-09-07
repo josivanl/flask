@@ -109,9 +109,7 @@ def structureDatabaseUpdateUpdate(id):
 @app.route('/jobMonitor/<id_customer>', methods=["POST"])
 def jobMonitor(id_customer):
     try:
-        print(id_customer)
         content = request.json
-        print(content)
         if len(content) > 0:
             helper.jobMonitorDelete(id_customer)
             helper.jobMonitorAdd(id_customer, content)
@@ -129,6 +127,23 @@ def jobMonitor(id_customer):
         # Serializing json
         return helper.dictionaryToJson(dictionary)
 
+@app.route('/appUserAdd/<token_customer>', methods=["POST"])
+def appUserAdd(token_customer):
+    try:
+        content = request.json
+        result = helper.appUserAdd(token_customer, content)
+        dictionary = {
+            'result': result
+        }
+        # Serializing json
+        return helper.dictionaryToJson(dictionary)
+    except (Exception) as error:
+        print(error)
+        dictionary = {
+            'result': error.message
+        }
+        # Serializing json
+        return helper.dictionaryToJson(dictionary)
 
 
 if __name__ == '__main__':

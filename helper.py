@@ -1,6 +1,8 @@
 import pandas as pd
 import psycopg2
 # from sqlalchemy import create_engine
+from cryptography.fernet import Fernet
+
 import json
 
 def connection():
@@ -27,6 +29,21 @@ def postgres_connect_engine():
 def dictionaryToJson(dictionary):
     json_object = json.dumps(dictionary, indent=4)
     return json_object
+
+def get_key():
+    return Fernet.generate_key()
+
+def crypt(password, key):
+    f = Fernet(key)
+    password_bytes = password.encode('utf-8')
+    password_crypt = f.encrypt(password_bytes)
+    return password_crypt
+
+def decrypt(password_crypt, key):
+    f = Fernet(key)
+    password_bytes = f.decrypt(password_crypt)
+    password = password_bytes.decode('utf-8')
+    return password
 
 def customer_entity(customer_token, date_start,customer_name, customer_email, customer_cpfcnpj, service_job, service_activity):
     sql_upset = """
@@ -205,3 +222,73 @@ def jobMonitorAdd(id_customer, job_json):
     cursor.close()
     conn.commit()
     conn.close()
+
+def customerFindIdToToken(token):
+    conn = connection()
+    cursor_token = conn.cursor()
+
+    sql_token = "SELECT id, enabled FROM customer WHERE token = %s"
+    cursor_token.execute(sql_token, [token])
+    result_customer = cursor_token.fetchall()
+    cursor_token.close()
+    conn.commit()
+    conn.close()
+
+    return  result_customer[0]
+
+def customerFindIdToEmail(email):
+    conn = connection()
+    cursor = conn.cursor()
+
+    sql = "SELECT email, enabled FROM customer_app_user WHERE email = %s"
+    cursor.execute(sql, [email])
+    result_customer = cursor.fetchall()
+    cursor.close()
+    conn.commit()
+    conn.close()
+
+    return  result_customer[0]
+
+def appUserAdd(token, user_json):
+    customer = customerFindIdToToken(token)
+    if int(customer[0]) > 0:
+        id_customer = customer[0]
+        enabled = customer[1]
+
+        if enabled == False:
+            return "Cliente desativado"
+        else:
+            json_data = json.loads(user_json)
+
+            conn = connection()
+            cursor = conn.cursor()
+
+            i = 0
+            while i < len(json_data):
+                email = json_data[i]["email"]
+                if email == "":
+                    return "E-mail inválido"
+                else:
+                    customer = customerFindIdToEmail(email)
+                    if customer[1] == False:
+                        return "Usuário cadastrado e desativado"
+                    else:
+                        name = json_data[i]["name"]
+                        password = json_data[i]["passord"]
+                        key = get_key()
+                        password_crypt = crypt(password, key)
+
+                        sql = "INSERT INTO customer_app_user (customer_id, name, password, token, date_created, enabled) values (%s, %s, %s, %s, now(), True)"
+                        cursor.execute(sql, (id_customer, name, password_crypt.decode('utf-8'), bytes(key, 'utf-8') ))
+                        i += 1
+
+            cursor.close()
+            conn.commit()
+            conn.close()
+
+            return "Cadastrado efetuado com sucesso!"
+
+
+
+
+
