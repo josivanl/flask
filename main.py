@@ -52,9 +52,14 @@ def saveOrUpdateCustomerDatabase():
         return helper.dictionaryToJson(dictionary)
     except (Exception) as error:
         print(error)
-        dictionary = {
-            'result': error.message
-        }
+        if error != "":
+            dictionary = {
+                'result': "Error: - " + str(error)
+            }
+        else:
+            dictionary = {
+                'result': error.massage
+            }
         # Serializing json
         return helper.dictionaryToJson(dictionary)
 
@@ -64,9 +69,14 @@ def structureDatabaseCreate():
         return helper.structure_database_create()
     except (Exception) as error:
         print(error)
-        dictionary = {
-            'result': error.message
-        }
+        if error != "":
+            dictionary = {
+                'result': "Error: - " + str(error)
+            }
+        else:
+            dictionary = {
+                'result': error.massage
+            }
         # Serializing json
         return helper.dictionaryToJson(dictionary)
 
@@ -76,9 +86,14 @@ def structureDatabaseCreateUpdate(id):
         return helper.structure_database_create_update(id)
     except (Exception) as error:
         print(error)
-        dictionary = {
-            'result': error.message
-        }
+        if error != "":
+            dictionary = {
+                'result': "Error: - " + str(error)
+            }
+        else:
+            dictionary = {
+                'result': error.massage
+            }
         # Serializing json
         return helper.dictionaryToJson(dictionary)
 
@@ -88,9 +103,14 @@ def structureDatabaseUpdate():
         return helper.structure_database_update()
     except (Exception) as error:
         print(error)
-        dictionary = {
-            'result': error.message
-        }
+        if error != "":
+            dictionary = {
+                'result': "Error: - " + str(error)
+            }
+        else:
+            dictionary = {
+                'result': error.massage
+            }
         # Serializing json
         return helper.dictionaryToJson(dictionary)
 
@@ -100,9 +120,14 @@ def structureDatabaseUpdateUpdate(id):
         return helper.structure_database_create_update_update(id)
     except (Exception) as error:
         print(error)
-        dictionary = {
-            'result': error.message
-        }
+        if error != "":
+            dictionary = {
+                'result': "Error: - " + str(error)
+            }
+        else:
+            dictionary = {
+                'result': error.massage
+            }
         # Serializing json
         return helper.dictionaryToJson(dictionary)
 
@@ -121,9 +146,14 @@ def jobMonitor(id_customer):
         return helper.dictionaryToJson(dictionary)
     except (Exception) as error:
         print(error)
-        dictionary = {
-            'result': error.message
-        }
+        if error != "":
+            dictionary = {
+                'result': "Error: - " + str(error)
+            }
+        else:
+            dictionary = {
+                'result': error.massage
+            }
         # Serializing json
         return helper.dictionaryToJson(dictionary)
 
@@ -139,12 +169,37 @@ def appUserAdd(token_customer):
         return helper.dictionaryToJson(dictionary)
     except (Exception) as error:
         print(error)
-        dictionary = {
-            'result': error.message
-        }
+        if error != "":
+            dictionary = {
+                'result': "Error: - " + str(error)
+            }
+        else:
+            dictionary = {
+                'result': error.massage
+            }
         # Serializing json
         return helper.dictionaryToJson(dictionary)
 
+
+@app.route('/appUserLogin', methods=["POST"])
+def appUserLogin():
+    try:
+        content = request.json
+        return helper.appUserFindToUser(content)
+
+        # Serializing json
+    except (Exception) as error:
+        print(error)
+        if error != "":
+            dictionary = {
+                'result': "Error: - " + str(error)
+            }
+        else:
+            dictionary = {
+                'result': error.massage
+            }
+        # Serializing json
+        return helper.dictionaryToJson(dictionary)
 
 if __name__ == '__main__':
     app.run(debug=True, port=os.getenv("PORT", default=5000))

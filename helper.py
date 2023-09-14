@@ -28,7 +28,7 @@ def postgres_connect_engine():
 
 def dictionaryToJson(dictionary):
     json_object = json.dumps(dictionary, indent=4)
-    return json_object
+    return json_object.encode('utf-8').decode('unicode-escape')
 
 def get_key():
     return Fernet.generate_key()
@@ -229,64 +229,102 @@ def customerFindIdToToken(token):
 
     sql_token = "SELECT id, enabled FROM customer WHERE token = %s"
     cursor_token.execute(sql_token, [token])
-    result_customer = cursor_token.fetchall()
+    result_customer = cursor_token.fetchone()
     cursor_token.close()
     conn.commit()
     conn.close()
 
-    return  result_customer[0]
+    return  result_customer
 
 def customerFindIdToEmail(email):
     conn = connection()
     cursor = conn.cursor()
 
-    sql = "SELECT email, enabled FROM customer_app_user WHERE email = %s"
+    sql = "SELECT id, email, enabled, token, password, name FROM customer_app_user WHERE email = %s"
     cursor.execute(sql, [email])
-    result_customer = cursor.fetchall()
+    result_customer = cursor.fetchone()
     cursor.close()
     conn.commit()
     conn.close()
 
-    return  result_customer[0]
+    return result_customer
 
 def appUserAdd(token, user_json):
     customer = customerFindIdToToken(token)
-    if int(customer[0]) > 0:
-        id_customer = customer[0]
-        enabled = customer[1]
+    if customer is not None:
+        if int(customer[0]) > 0:
+            id_customer = customer[0]
+            enabled = customer[1]
 
-        if enabled == False:
-            return "Cliente desativado"
-        else:
-            json_data = json.loads(user_json)
+            if enabled == False:
+                return "Cliente desativado"
+            else:
+                json_data = user_json
 
-            conn = connection()
-            cursor = conn.cursor()
+                conn = connection()
+                cursor = conn.cursor()
 
-            i = 0
-            while i < len(json_data):
-                email = json_data[i]["email"]
+                email = json_data["email"]
                 if email == "":
                     return "E-mail inválido"
                 else:
                     customer = customerFindIdToEmail(email)
-                    if customer[1] == False:
-                        return "Usuário cadastrado e desativado"
+                    if customer is not None:
+                        if customer[2] == False:
+                            return "Usuário cadastrado e desativado"
+                        else:
+                            return "Usuário já cadastrado"
                     else:
-                        name = json_data[i]["name"]
-                        password = json_data[i]["passord"]
+                        name = json_data["name"]
+                        password = json_data["password"]
                         key = get_key()
                         password_crypt = crypt(password, key)
+                        key_string = key.decode('utf-8')
+                        password_crypt_string = password_crypt.decode('utf-8')
 
-                        sql = "INSERT INTO customer_app_user (customer_id, name, password, token, date_created, enabled) values (%s, %s, %s, %s, now(), True)"
-                        cursor.execute(sql, (id_customer, name, password_crypt.decode('utf-8'), bytes(key, 'utf-8') ))
-                        i += 1
+                        sql = "INSERT INTO customer_app_user (customer_id, name, email, password, token, date_created, date_update, enabled) values (%s, %s, %s, %s, %s, now(), now(), True)"
+                        cursor.execute(sql, (id_customer, name, email, password_crypt_string, key_string))
+                        cursor.close()
+                        conn.commit()
+                        conn.close()
 
-            cursor.close()
-            conn.commit()
-            conn.close()
+                        return "Cadastro efetuado com sucesso!"
 
-            return "Cadastrado efetuado com sucesso!"
+    else:
+        return "Cliente não encontrado/cadastrado"
+
+def appUserFindToUser(user_json):
+    email = str(user_json["email"])
+    password = str(user_json["password"])
+
+    if email != "" and password != "":
+        customer = customerFindIdToEmail(email)
+        if customer is not None:
+            key = bytes(customer[3], 'utf-8')
+            password_decrypt = decrypt(customer[4], key)
+
+            if password_decrypt == password:
+                dictionary = {
+                    'result': "Ok",
+                    "id": customer[0],
+                    "name": customer[5]
+                }
+                return dictionaryToJson(dictionary)
+            else:
+                dictionary = {
+                    'result': "NOk",
+                    "id": "0",
+                    "name": ""
+                }
+                return dictionaryToJson(dictionary)
+        else:
+            dictionary = {
+                'result': "NOk",
+                "id": "0",
+                "name": ""
+            }
+            return dictionaryToJson(dictionary)
+
 
 
 
