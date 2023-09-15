@@ -305,21 +305,24 @@ def appUserFindToUser(user_json):
 
             if password_decrypt == password:
                 dictionary = {
-                    'result': "Ok",
+                    'result': True,
+                    'message': "Sucesso",
                     "id": customer[0],
                     "name": customer[5]
                 }
                 return dictionaryToJson(dictionary)
             else:
                 dictionary = {
-                    'result': "NOk",
+                    'result': False,
+                    'message': "E-mail ou senha incorretos",
                     "id": "0",
                     "name": ""
                 }
                 return dictionaryToJson(dictionary)
         else:
             dictionary = {
-                'result': "NOk",
+                'result': False,
+                'message': "Usuário não cadastrado",
                 "id": "0",
                 "name": ""
             }

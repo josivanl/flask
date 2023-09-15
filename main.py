@@ -192,11 +192,17 @@ def appUserLogin():
         print(error)
         if error != "":
             dictionary = {
-                'result': "Error: - " + str(error)
+                'result': False,
+                'message': "Error: - " + str(error),
+                "id": "0",
+                "name": ""
             }
         else:
             dictionary = {
-                'result': error.massage
+                'result': False,
+                'message': error.massage,
+                "id": "0",
+                "name": ""
             }
         # Serializing json
         return helper.dictionaryToJson(dictionary)
