@@ -223,6 +223,18 @@ def jobMonitorAdd(id_customer, job_json):
     conn.commit()
     conn.close()
 
+def customerFindIdToId(id):
+    conn = connection()
+    cursor_token = conn.cursor()
+
+    sql_token = "SELECT id, name, token, email, service_activity, service_job, enabled FROM customer WHERE id  = %s"
+    cursor_token.execute(sql_token, [id])
+    result_customer = cursor_token.fetchone()
+    cursor_token.close()
+    conn.commit()
+    conn.close()
+
+    return  result_customer
 def customerFindIdToToken(token):
     conn = connection()
     cursor_token = conn.cursor()
@@ -236,11 +248,11 @@ def customerFindIdToToken(token):
 
     return  result_customer
 
-def customerFindIdToEmail(email):
+def userFindIdToEmail(email):
     conn = connection()
     cursor = conn.cursor()
 
-    sql = "SELECT id, email, enabled, token, password, name FROM customer_app_user WHERE email = %s"
+    sql = "SELECT id, email, enabled, token, password, name, customer_id FROM customer_app_user WHERE email = %s"
     cursor.execute(sql, [email])
     result_customer = cursor.fetchone()
     cursor.close()
@@ -268,7 +280,7 @@ def appUserAdd(token, user_json):
                 if email == "":
                     return "E-mail inválido"
                 else:
-                    customer = customerFindIdToEmail(email)
+                    customer = userFindIdToEmail(email)
                     if customer is not None:
                         if customer[2] == False:
                             return "Usuário cadastrado e desativado"
@@ -298,25 +310,32 @@ def appUserFindToUser(user_json):
     password = str(user_json["password"])
 
     if email != "" and password != "":
-        customer = customerFindIdToEmail(email)
-        if customer is not None:
-            key = bytes(customer[3], 'utf-8')
-            password_decrypt = decrypt(customer[4], key)
+        user = userFindIdToEmail(email)
+        if user is not None:
+            key = bytes(user[3], 'utf-8')
+            password_decrypt = decrypt(user[4], key)
 
             if password_decrypt == password:
-                dictionary = {
-                    'result': True,
-                    'message': "Sucesso",
-                    "id": customer[0],
-                    "name": customer[5]
-                }
-                return dictionaryToJson(dictionary)
+                customer = customerFindIdToId(user[6])
+                if customer is not None:
+
+                    dictionary = {
+                        'result': True,
+                        'message': "Sucesso",
+                        "id": user[0],
+                        "name": user[5],
+                        "service_activity": customer[4],
+                        "service_job": customer[5]
+                    }
+                    return dictionaryToJson(dictionary)
             else:
                 dictionary = {
                     'result': False,
                     'message': "E-mail ou senha incorretos",
                     "id": "0",
-                    "name": ""
+                    "name": "",
+                    "service_activity": False,
+                    "service_job": False
                 }
                 return dictionaryToJson(dictionary)
         else:
@@ -324,7 +343,9 @@ def appUserFindToUser(user_json):
                 'result': False,
                 'message': "Usuário não cadastrado",
                 "id": "0",
-                "name": ""
+                "name": "",
+                "service_activity": False,
+                "service_job": False
             }
             return dictionaryToJson(dictionary)
 
