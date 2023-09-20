@@ -349,6 +349,23 @@ def appUserFindToUser(user_json):
             }
             return dictionaryToJson(dictionary)
 
+def jobMonitorList(id_customer):
+    conn = connection()
+    cursor = conn.cursor()
+
+    sql = "SELECT JOB.id, JOB.id_job_customer, JOB.name, JOB.last_run, JOB.next_run, JOB.status, JOB.enabled, JOB.date_update, True AS result FROM service_job AS JOB WHERE JOB.customer_id = %s ORDER BY JOB.name"
+    cursor.execute(sql, [id_customer])
+    result = cursor.fetchall()
+    cursor.close()
+    conn.commit()
+    conn.close()
+
+    df = pd.DataFrame(result)
+    if df.size > 0:
+        df.columns = ['id', 'id_job_customer', 'name', 'last_run', 'next_run', 'status', 'enabled', 'date_update', 'result']
+
+    return df.to_json(orient="records")
+
 
 
 

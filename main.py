@@ -211,5 +211,27 @@ def appUserLogin():
         # Serializing json
         return helper.dictionaryToJson(dictionary)
 
+@app.route('/appListJobMonitor', methods=["GET"])
+def appListJobMonitor():
+    try:
+        id_customer = request.args.get('id_customer')
+        return helper.jobMonitorList(id_customer)
+
+        # Serializing json
+    except (Exception) as error:
+        print(error)
+        if error != "":
+            dictionary = {
+                'result': False,
+                'message': "Error: - " + str(error)
+            }
+        else:
+            dictionary = {
+                'result': False,
+                'message': error.massage
+            }
+        # Serializing json
+        return helper.dictionaryToJson(dictionary)
+
 if __name__ == '__main__':
     app.run(debug=True, port=os.getenv("PORT", default=5000))
