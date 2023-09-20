@@ -363,8 +363,11 @@ def jobMonitorList(id_customer):
     df = pd.DataFrame(result)
     if df.size > 0:
         df.columns = ['id', 'id_job_customer', 'name', 'last_run', 'next_run', 'status', 'enabled', 'date_update', 'result']
+        # df['last_run'] = pd.to_datetime(df['last_run'], format=['%d%M%Y %H:%M:%S'])
+        # df['next_run'] = pd.to_datetime(df['next_run'], format=['%d%M%Y %H:%M:%S'])
 
-    return df.to_json(orient="records")
+    json_data = df.to_json(orient="records", date_format='iso', date_unit='s')
+    return json_data
 
 
 
